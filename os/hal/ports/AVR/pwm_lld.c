@@ -348,8 +348,37 @@ void pwm_lld_init(void)
  */
 void pwm_lld_start(PWMDriver *pwmp)
 {
-  uint8_t prescale = 0;
+  uint8_t prescale = 1;
   if (pwmp->state == PWM_STOP) {
+
+#if ( (AVR_PWM_USE_TIM1 || AVR_PWM_USE_TIM3) && (\
+  defined(__AVR_AT90USB1286__) || \
+  defined(__AVR_AT90USB1287__) || \
+  defined(__AVR_AT90USB646__)  || \
+  defined(__AVR_AT90USB647__) || \
+  defined(__AVR_ATmega16U4__) || \
+  defined(__AVR_ATmega32U4__) \
+) || defined(__DOXYGEN__)
+	if (pwmp == &PWMD1 || pwmp == &PWMD3) {
+      uint8_t i = timer_index(pwmp);
+      switch (pwmp->config->prescale_factor) {
+      case 0: prescale = 0; break;
+      case 1: prescale = 1; break;
+      case 8: prescale = 2; break;
+      case 64: prescale = 3; break;
+      case 256: prescale = 4; break;
+      case 1024: prescale = 5; break;
+      default: osalDbgAssert(TRUE, "invalid prescale factor");
+      }
+      *regs_table[i].tccrb &= ~((1 << CS12) | (1 << CS11) | (1 << CS10));
+      *regs_table[i].tccrb |= (
+        ((prescale >> 2) << CS12) |
+        (((prescale >> 1) & 1) << CS11) |
+        ((prescale & 1) << CS10)
+      );
+      *regs_table[i].timsk = (1 << TOIE1);
+    }
+#endif
 
 #if AVR_PWM_USE_TIM2 || defined(__DOXYGEN__)
     if (pwmp == &PWMD2) {
@@ -376,23 +405,44 @@ void pwm_lld_start(PWMDriver *pwmp)
     }
 #endif
 
-    uint8_t i = timer_index(pwmp);
-    switch (pwmp->config->prescale_factor) {
-    case 0: prescale = 0; break;
-    case 1: prescale = 1; break;
-    case 8: prescale = 2; break;
-    case 64: prescale = 3; break;
-    case 256: prescale = 4; break;
-    case 1024: prescale = 5; break;
-    default: osalDbgAssert(TRUE, "invalid prescale factor");
+// See page 166 of Teensy 2.0 MCU manual.
+#if ( AVR_PWM_USE_TIM4 && ( \
+  defined(__AVR_ATmega16U4__) || \
+  defined(__AVR_ATmega32U4__) \
+) || defined(__DOXYGEN__)
+	if (pwmp == &PWMD4) {
+      switch (pwmp->config->prescale_factor) {
+      case 0: prescale = 0; break;
+      case 1: prescale = 1; break;
+      case 2: prescale = 2; break;
+      case 4: prescale = 3; break;
+      case 8: prescale = 4; break;
+      case 16: prescale = 5; break;
+      case 32: prescale = 6; break;
+      case 64: prescale = 7; break;
+      case 128: prescale = 8; break;
+      case 256: prescale = 9; break;
+      case 512: prescale = 10; break;
+      case 1024: prescale = 11; break;
+      case 2048: prescale = 12; break;
+      case 4096: prescale = 13; break;
+      case 8192: prescale = 14; break;
+      case 16384: prescale = 15; break;
+      default: osalDbgAssert(TRUE, "invalid prescale factor");
+      }
+      *regs_table[i].tccrb &= ~(
+        (1 << CS43) | (1 << CS42) | (1 << CS41) | (1 << CS40)
+      );
+      *regs_table[i].tccrb |= (
+        ((prescale >> 3) << CS43) |
+        (((prescale >> 2) & 1) << CS42) |
+        (((prescale >> 1) & 1) << CS41) |
+        ((prescale & 1) << CS40)
+      );
+      *regs_table[i].timsk = (1 << TOIE1);
     }
-    *regs_table[i].tccrb &= ~((1 << CS22) | (1 << CS21) | (1 << CS20));
-    *regs_table[i].tccrb |= (
-      ((prescale >> 2) << CS22) |
-      (((prescale >> 1) & 1) << CS21) |
-      ((prescale & 1) << CS20)
-    );
-    *regs_table[i].timsk = (1 << TOIE1);
+#endif
+
   }
 }
 
