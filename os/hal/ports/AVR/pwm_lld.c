@@ -358,7 +358,7 @@ void pwm_lld_start(PWMDriver *pwmp)
   defined(__AVR_AT90USB647__) || \
   defined(__AVR_ATmega16U4__) || \
   defined(__AVR_ATmega32U4__) \
-) || defined(__DOXYGEN__)
+) ) || defined(__DOXYGEN__)
 	if (pwmp == &PWMD1 || pwmp == &PWMD3) {
       uint8_t i = timer_index(pwmp);
       switch (pwmp->config->prescale_factor) {
@@ -409,7 +409,7 @@ void pwm_lld_start(PWMDriver *pwmp)
 #if ( AVR_PWM_USE_TIM4 && ( \
   defined(__AVR_ATmega16U4__) || \
   defined(__AVR_ATmega32U4__) \
-) || defined(__DOXYGEN__)
+) ) || defined(__DOXYGEN__)
 	if (pwmp == &PWMD4) {
       switch (pwmp->config->prescale_factor) {
       case 0: prescale = 0; break;
