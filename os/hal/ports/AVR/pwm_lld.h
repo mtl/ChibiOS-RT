@@ -90,6 +90,11 @@ typedef uint8_t pwmmode_t;
 typedef uint8_t pwmchannel_t;
 
 /**
+ * @brief   Type of a channels mask.
+ */
+typedef uint8_t pwmchnmsk_t;
+
+/**
  * @brief   PWM counter type.
  */
 typedef uint16_t pwmcnt_t;
@@ -132,6 +137,12 @@ typedef struct {
    */
   pwmcnt_t                  period;
   /**
+   * @brief   Prescale factor.
+   * @note    The low level can use assertions in order to catch invalid
+   *          prescale factor specifications.
+   */
+  uint16_t                  prescale_factor;
+  /**
    * @brief Periodic callback pointer.
    * @note  This callback is invoked on PWM counter reset. If set to
    *        @p NULL then the callback is disabled.
@@ -155,13 +166,21 @@ struct PWMDriver {
    */
   pwmstate_t                state;
   /**
-   * @brief Current configuration data.
+   * @brief Current driver configuration data.
    */
   const PWMConfig           *config;
   /**
    * @brief   Current PWM period in ticks.
    */
   pwmcnt_t                  period;
+  /**
+   * @brief   Mask of the enabled channels.
+   */
+  pwmchnmsk_t               enabled;
+  /**
+   * @brief   Number of channels in this instance.
+   */
+  pwmchannel_t              channels;
 #if defined(PWM_DRIVER_EXT_FIELDS)
   PWM_DRIVER_EXT_FIELDS
 #endif
@@ -192,6 +211,22 @@ extern PWMDriver PWMD4;
 extern PWMDriver PWMD5;
 #endif
 
+#if defined(__AVR_AT90USB1286__) || \
+      defined(__AVR_AT90USB1287__) || \
+      defined(__AVR_AT90USB646__)  || \
+      defined(__AVR_AT90USB647__)
+  #define AVR_PWM_TIM1_CHANNELS     3
+  #define AVR_PWM_TIM2_CHANNELS     2
+  #define AVR_PWM_TIM3_CHANNELS     3
+#elif defined(__AVR_ATmega16U4__) || \
+      defined(__AVR_ATmega32U4__)
+  #define AVR_PWM_TIM1_CHANNELS     3
+  #define AVR_PWM_TIM3_CHANNELS     3
+  #define AVR_PWM_TIM4_CHANNELS     3
+#else
+  #warning "Device not supported by PWM driver"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -203,6 +238,12 @@ extern "C" {
                               pwmchannel_t channel,
                               pwmcnt_t width);
   void pwm_lld_disable_channel(PWMDriver *pwmp, pwmchannel_t channel);
+  void pwm_lld_enable_periodic_notification(PWMDriver *pwmp);
+  void pwm_lld_disable_periodic_notification(PWMDriver *pwmp);
+  void pwm_lld_enable_channel_notification(PWMDriver *pwmp,
+                                           pwmchannel_t channel);
+  void pwm_lld_disable_channel_notification(PWMDriver *pwmp,
+                                            pwmchannel_t channel);
 #ifdef __cplusplus
 }
 #endif

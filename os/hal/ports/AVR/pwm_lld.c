@@ -305,30 +305,35 @@ void pwm_lld_init(void)
 {
 #if AVR_PWM_USE_TIM1 || defined(__DOXYGEN__)
   pwmObjectInit(&PWMD1);
+  PWMD1.channels = AVR_PWM_TIM1_CHANNELS;
   TCCR1A = (1 << WGM11) | (1 << WGM10);
   TCCR1B = (0 << WGM13) | (1 << WGM12);
 #endif
 
 #if AVR_PWM_USE_TIM2 || defined(__DOXYGEN__)
   pwmObjectInit(&PWMD2);
+  PWMD2.channels = AVR_PWM_TIM2_CHANNELS;
   TCCR2A = (1 << WGM21) | (1 << WGM20);
   TCCR2B = (0 << WGM22);
 #endif
 
 #if AVR_PWM_USE_TIM3 || defined(__DOXYGEN__)
   pwmObjectInit(&PWMD3);
+  PWMD3.channels = AVR_PWM_TIM3_CHANNELS;
   TCCR3A = (1 << WGM31) | (1 << WGM30);
   TCCR3B = (0 << WGM33) | (1 << WGM32);
 #endif
 
 #if AVR_PWM_USE_TIM4 || defined(__DOXYGEN__)
   pwmObjectInit(&PWMD4);
+  PWMD4.channels = AVR_PWM_TIM4_CHANNELS;
   TCCR4A = (1 << WGM41) | (1 << WGM40);
   TCCR4B = (0 << WGM43) | (1 << WGM42);
 #endif
 
 #if AVR_PWM_USE_TIM5 || defined(__DOXYGEN__)
   pwmObjectInit(&PWMD5);
+  PWMD5.channels = AVR_PWM_TIM5_CHANNELS;
   TCCR5A = (1 << WGM51) | (1 << WGM50);
   TCCR5B = (0 << WGM53) | (1 << WGM52);
 #endif
@@ -343,23 +348,50 @@ void pwm_lld_init(void)
  */
 void pwm_lld_start(PWMDriver *pwmp)
 {
+  uint8_t prescale = 0;
   if (pwmp->state == PWM_STOP) {
 
 #if AVR_PWM_USE_TIM2 || defined(__DOXYGEN__)
     if (pwmp == &PWMD2) {
-      TCCR2B &= ~((1 << CS22) | (1 << CS21));
-      TCCR2B |= (1 << CS20);
+      switch (pwmp->config->prescale_factor) {
+      case 0: prescale = 0; break;
+      case 1: prescale = 1; break;
+      case 8: prescale = 2; break;
+      case 32: prescale = 3; break;
+      case 64: prescale = 4; break;
+      case 128: prescale = 5; break;
+      case 256: prescale = 6; break;
+      case 1024: prescale = 7; break;
+      default: osalDbgAssert(TRUE, "invalid prescale factor");
+      }
+      TCCR2B &= ~((1 << CS22) | (1 << CS21) | (1 << CS20));
+      TCCR2B |= (
+        ((prescale >> 2) << CS22) |
+        (((prescale >> 1) & 1) << CS21) |
+        ((prescale & 1) << CS20)
+      );
       if (pwmp->config->callback != NULL)
         TIMSK2 |= (1 << TOIE2);
       return;
     }
 #endif
 
-    /* TODO: support other prescaler options */
-
     uint8_t i = timer_index(pwmp);
-    *regs_table[i].tccrb &= ~(1 << CS11);
-    *regs_table[i].tccrb |= (1 << CS12) | (1 << CS10);
+    switch (pwmp->config->prescale_factor) {
+    case 0: prescale = 0; break;
+    case 1: prescale = 1; break;
+    case 8: prescale = 2; break;
+    case 64: prescale = 3; break;
+    case 256: prescale = 4; break;
+    case 1024: prescale = 5; break;
+    default: osalDbgAssert(TRUE, "invalid prescale factor");
+    }
+    *regs_table[i].tccrb &= ~((1 << CS22) | (1 << CS21) | (1 << CS20));
+    *regs_table[i].tccrb |= (
+      ((prescale >> 2) << CS22) |
+      (((prescale >> 1) & 1) << CS21) |
+      ((prescale & 1) << CS20)
+    );
     *regs_table[i].timsk = (1 << TOIE1);
   }
 }
@@ -488,6 +520,62 @@ void pwm_lld_disable_channel(PWMDriver *pwmp, pwmchannel_t channel)
                  6 - 2*channel,
                  PWM_OUTPUT_DISABLED);
   *regs_table[i].timsk &= ~(1 << (channel + 1));
+}
+
+/**
+ * @brief   Enables the periodic activation edge notification.
+ * @pre     The PWM unit must have been activated using @p pwmStart().
+ * @note    If the notification is already enabled then the call has no effect.
+ *
+ * @param[in] pwmp      pointer to a @p PWMDriver object
+ *
+ * @notapi
+ */
+void pwm_lld_enable_periodic_notification(PWMDriver *pwmp) {
+  osalDbgAssert(TRUE, "callback not supported");
+}
+
+/**
+ * @brief   Disables the periodic activation edge notification.
+ * @pre     The PWM unit must have been activated using @p pwmStart().
+ * @note    If the notification is already disabled then the call has no effect.
+ *
+ * @param[in] pwmp      pointer to a @p PWMDriver object
+ *
+ * @notapi
+ */
+void pwm_lld_disable_periodic_notification(PWMDriver *pwmp) {
+}
+
+/**
+ * @brief   Enables a channel de-activation edge notification.
+ * @pre     The PWM unit must have been activated using @p pwmStart().
+ * @pre     The channel must have been activated using @p pwmEnableChannel().
+ * @note    If the notification is already enabled then the call has no effect.
+ *
+ * @param[in] pwmp      pointer to a @p PWMDriver object
+ * @param[in] channel   PWM channel identifier (0...channels-1)
+ *
+ * @notapi
+ */
+void pwm_lld_enable_channel_notification(PWMDriver *pwmp,
+                                         pwmchannel_t channel) {
+  osalDbgAssert(TRUE, "callback not supported");
+}
+
+/**
+ * @brief   Disables a channel de-activation edge notification.
+ * @pre     The PWM unit must have been activated using @p pwmStart().
+ * @pre     The channel must have been activated using @p pwmEnableChannel().
+ * @note    If the notification is already disabled then the call has no effect.
+ *
+ * @param[in] pwmp      pointer to a @p PWMDriver object
+ * @param[in] channel   PWM channel identifier (0...channels-1)
+ *
+ * @notapi
+ */
+void pwm_lld_disable_channel_notification(PWMDriver *pwmp,
+                                          pwmchannel_t channel) {
 }
 
 #endif /* HAL_USE_PWM */
