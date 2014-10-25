@@ -18,6 +18,49 @@
 #include "hal.h"
 #include "test.h"
 
+#include "matrix/matrix.h"
+#include "matrix/scanner_a.h"
+#include "pal_lld.h"
+
+#define KBD_MATRIX_NUM_ROWS    5
+#define KBD_MATRIX_NUM_COLS    19
+
+/**
+ * @brief Keyboard matrix configuration.
+ */
+static KBDMatrixConfig matrix_config = {
+  .num_rows = KBD_MATRIX_NUM_ROWS,
+  .num_cols = KBD_MATRIX_NUM_COLS,
+  .row_pins = {
+    { .portid = IOPORT1, .mask = 0b00001, .offset = 0 },
+    { .portid = IOPORT1, .mask = 0b00010, .offset = 1 },
+    { .portid = IOPORT1, .mask = 0b00100, .offset = 2 },
+    { .portid = IOPORT1, .mask = 0b01000, .offset = 3 },
+    { .portid = IOPORT1, .mask = 0b10000, .offset = 4 }
+  },
+  .col_pins = {
+    { .portid = IOPORT3, .mask = 0b00001000, .offset = 3 },
+    { .portid = IOPORT3, .mask = 0b00000100, .offset = 2 },
+    { .portid = IOPORT3, .mask = 0b00000010, .offset = 1 },
+    { .portid = IOPORT3, .mask = 0b00000001, .offset = 0 },
+    { .portid = IOPORT6, .mask = 0b01000000, .offset = 6 },
+    { .portid = IOPORT6, .mask = 0b00100000, .offset = 5 },
+    { .portid = IOPORT6, .mask = 0b00010000, .offset = 4 },
+    { .portid = IOPORT6, .mask = 0b00001000, .offset = 3 },
+    { .portid = IOPORT6, .mask = 0b00000100, .offset = 2 },
+    { .portid = IOPORT6, .mask = 0b00000010, .offset = 1 },
+    { .portid = IOPORT5, .mask = 0b00000010, .offset = 1 },
+    { .portid = IOPORT5, .mask = 0b00000001, .offset = 0 },
+    { .portid = IOPORT4, .mask = 0b10000000, .offset = 7 },
+    { .portid = IOPORT5, .mask = 0b10000000, .offset = 7 },
+    { .portid = IOPORT6, .mask = 0b00000001, .offset = 0 },
+    { .portid = IOPORT1, .mask = 0b00100000, .offset = 5 },
+    { .portid = IOPORT4, .mask = 0b00010000, .offset = 4 },
+    { .portid = IOPORT4, .mask = 0b00001000, .offset = 3 },
+    { .portid = IOPORT5, .mask = 0b01000000, .offset = 6 }
+  }
+};
+
 static WORKING_AREA(waThread1, 32);
 static msg_t Thread1(void *arg) {
 
@@ -43,6 +86,21 @@ int main(void) {
   halInit();
   chSysInit();
 
+
+  matrix_config.scanner = scanner_a();
+  matrix_config.scanner.init( matrix_config );
+
+
+
+
+
+
+
+
+
+
+
+
   palClearPad(IOPORT2, PORTD_LED1);
 
   /*
@@ -60,3 +118,4 @@ int main(void) {
     chThdSleepMilliseconds(1000);
   }
 }
+/* vi: set et sts=2 sw=2 ts=2: */
