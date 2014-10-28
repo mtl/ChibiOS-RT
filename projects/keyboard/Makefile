@@ -75,6 +75,7 @@ SRC = $(PORTSRC) \
       $(PLATFORMSRC) \
       $(BOARDSRC) \
       $(CHIBIOS)/os/various/evtimer.c \
+	  keyboard/input/matrix/scanner_a.c \
       main.c
 
 # List C++ source files here. (C dependencies are automatically generated.)

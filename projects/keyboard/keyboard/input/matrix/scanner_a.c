@@ -4,8 +4,11 @@
  *
  ***************************************************************************/
 
-#include "matrix/scanner_a.h"
+#include "ch.h"
+#include "hal.h"
 #include "pal.h"
+
+#include "keyboard/input/matrix/scanner_a.h"
 
 /**
  * @brief Scanner A interface structure.
@@ -27,7 +30,8 @@ KBDMatrixScanner * scanner_a( void ) {
 /**
  * @brief Get a row of matrix data.
  */
-matrix_row_t scanner_a_get_row( uint8_t row ) {
+uint8_t * scanner_a_get_row( uint8_t row ) {
+  return NULL;
 }
 
 /**
@@ -37,7 +41,7 @@ void scanner_a_init( KBDMatrixConfig * config ) {
 
   /* Initialize columns.*/
   IOBus * col_pins = config->col_pins;
-  for ( int i; i < config->num_cols; i++ ) {
+  for ( int i = 0; i < config->num_cols; i++ ) {
     palSetPadMode(
       col_pins[ i ].portid,
       col_pins[ i ].offset,
@@ -65,7 +69,7 @@ void scanner_a_init( KBDMatrixConfig * config ) {
 }
 
 
-
+/*
     // To use PORTF disable JTAG with writing JTD bit twice within four cycles.
     MCUCR |= (1<<JTD);
     MCUCR |= (1<<JTD);
@@ -90,6 +94,7 @@ void scanner_a_init( KBDMatrixConfig * config ) {
 
 
 }
+*/
 
 /**
  * @brief Print the current matrix state.
@@ -101,6 +106,7 @@ void scanner_a_print( void ) {
  * @brief Scan the matrix.
  */
 uint8_t scanner_a_scan( void ) {
+  return 0;
 }
 
 /* vi: set et sts=2 sw=2 ts=2: */

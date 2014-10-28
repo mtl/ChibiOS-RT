@@ -16,11 +16,13 @@
 
 #include "ch.h"
 #include "hal.h"
+#include "pal.h"
 #include "test.h"
 
-#include "matrix/matrix.h"
-#include "matrix/scanner_a.h"
 #include "pal_lld.h"
+
+#include "keyboard/input/matrix/matrix.h"
+#include "keyboard/input/matrix/scanner_a.h"
 
 #define KBD_MATRIX_NUM_ROWS    5
 #define KBD_MATRIX_NUM_COLS    19
@@ -28,17 +30,17 @@
 /**
  * @brief Keyboard matrix configuration.
  */
-static KBDMatrixConfig matrix_config = {
+KBDMatrixConfig * matrix_config = &(KBDMatrixConfig){
   .num_rows = KBD_MATRIX_NUM_ROWS,
   .num_cols = KBD_MATRIX_NUM_COLS,
-  .row_pins = {
-    { .portid = IOPORT1, .mask = 0b00001, .offset = 0 },
-    { .portid = IOPORT1, .mask = 0b00010, .offset = 1 },
-    { .portid = IOPORT1, .mask = 0b00100, .offset = 2 },
-    { .portid = IOPORT1, .mask = 0b01000, .offset = 3 },
-    { .portid = IOPORT1, .mask = 0b10000, .offset = 4 }
+  .row_pins = &(IOBus[]){
+    { .portid = IOPORT1, .mask = 0b00000001, .offset = 0 },
+    { .portid = IOPORT1, .mask = 0b00000010, .offset = 1 },
+    { .portid = IOPORT1, .mask = 0b00000100, .offset = 2 },
+    { .portid = IOPORT1, .mask = 0b00001000, .offset = 3 },
+    { .portid = IOPORT1, .mask = 0b00010000, .offset = 4 }
   },
-  .col_pins = {
+  .col_pins = &(IOBus[]){
     { .portid = IOPORT3, .mask = 0b00001000, .offset = 3 },
     { .portid = IOPORT3, .mask = 0b00000100, .offset = 2 },
     { .portid = IOPORT3, .mask = 0b00000010, .offset = 1 },
@@ -87,8 +89,8 @@ int main(void) {
   chSysInit();
 
 
-  matrix_config.scanner = scanner_a();
-  matrix_config.scanner.init( matrix_config );
+  matrix_config->scanner = scanner_a();
+  matrix_config->scanner->init( matrix_config );
 
 
 

@@ -16,36 +16,17 @@
 //#include "matrix.h"
 //#include "util.h"
 #include "pal.h"
+#include "keyboard/input/matrix/scanner.h"
 
 /***************************************************************************/
 // Static prototypes:
 
-/**
- * @brief   Matrix scanner interface.
- */
-typedef struct {
-  /**
-   * @brief Get a row of matrix data.
-   */
-  matrix_row_t (*get_row)( uint8_t row );
-  /**
-   * @brief Initialize the scanner.
-   */
-  void (*init)( KBDMatrixConfig* );
-  /**
-   * @brief Print the current matrix state.
-   */
-  void (*print)( void );
-  /**
-   * @brief Scan the matrix.
-   */
-  uint8_t (*scan)( void );
-} KBDMatrixScanner;
+typedef struct kbd_matrix_scanner KBDMatrixScanner;
 
 /**
  * @brief   Keyboard matrix interface configuration structure.
  */
-typedef struct {
+typedef struct kbd_matrix_config {
   /**
    * @brief Number of rows in the matrix.
    */
@@ -58,12 +39,12 @@ typedef struct {
    * @brief Array of row pin descriptors.
    * @note  @p IOBus.mask must have only one bit set.
    */
-  IOBus *                   row_pins;
+  IOBus                     (*row_pins)[];
   /**
    * @brief Array of column pin descriptors.
    * @note  @p IOBus.mask must have only one bit set.
    */
-  IOBus *                   col_pins;
+  IOBus                     (*col_pins)[];
   /**
    * @brief Matrix scanner interface.
    */
