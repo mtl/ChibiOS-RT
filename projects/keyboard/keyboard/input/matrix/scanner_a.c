@@ -10,6 +10,10 @@
 
 #include "keyboard/input/matrix/scanner_a.h"
 
+/* Static function prototypes: */
+static void select_row( uint8_t, KBDMatrixConfig * );
+static void unselect_row( uint8_t, KBDMatrixConfig * );
+
 /**
  * @brief Scanner A interface structure.
  */
@@ -22,30 +26,31 @@ static KBDMatrixScanner scanner = {
 
 /**
  * @brief Get the scanner interface.
+ *
+ * @return the scanner interface structure
  */
-KBDMatrixScanner * scanner_a( void ) {
+KBDMatrixScanner * scanner_a() {
   return &scanner;
 }
 
 /**
  * @brief Get a row of matrix data.
+ *
+ * @return the row of data
  */
 uint8_t * scanner_a_get_row( uint8_t row ) {
   return NULL;
 }
 
-static void unselect_row( uint8_t row, KBDMatrixConfig * config ) {
-
-  /* Get port ID and pin offset: */
-  IOBus *row_def = &(*config->row_pins)[ row ];
-  ioportid_t portid = row_def->portid;
-  uint_fast8_t offset = row_def->offset;
-
-  /* Hi-Z input: */
-  palSetPadMode( portid, offset, PAL_MODE_INPUT );
-  palClearPad( portid, offset );
-}
-
+/**
+ * @brief   Select a row to be scanned.
+ * @details Output low (DDR:1, PORT:0) to select.
+ *
+ * @param[in] row the number of the row to select
+ * @param[in] config the matrix configuration
+ *
+ * @notapi
+ */
 static void select_row( uint8_t row, KBDMatrixConfig * config ) {
 
   /* Get port ID and pin offset: */
@@ -53,9 +58,8 @@ static void select_row( uint8_t row, KBDMatrixConfig * config ) {
   ioportid_t portid = row_def->portid;
   uint_fast8_t offset = row_def->offset;
 
-  /* Output low to select the row: */
   palSetPadMode( portid, offset, PAL_MODE_OUTPUT_PUSHPULL );
-  palClearPad( portid, offset );
+  palWritePad( portid, offset, PAL_LOW );
 }
 
 /**
@@ -92,8 +96,6 @@ void scanner_a_init( KBDMatrixConfig * config ) {
 
 }
 
-
-
 /**
  * @brief Print the current matrix state.
  */
@@ -105,6 +107,21 @@ void scanner_a_print( void ) {
  */
 uint8_t scanner_a_scan( void ) {
   return 0;
+}
+
+/**
+ * @brief   Unselect a row (to initialize or after scanning).
+ * @details Hi-Z input (DDR:0, PORT:0) to unselect.
+ *
+ * @param[in] row the number of the row to unselect
+ * @param[in] config the matrix configuration
+ *
+ * @notapi
+ */
+static void unselect_row( uint8_t row, KBDMatrixConfig * config ) {
+
+  IOBus *row_def = &(*config->row_pins)[ row ];
+  palSetPadMode( row_def->portid, row_def->offset, PAL_MODE_INPUT );
 }
 
 /* vi: set et sts=2 sw=2 ts=2: */
