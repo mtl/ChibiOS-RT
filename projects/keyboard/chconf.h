@@ -290,7 +290,7 @@
  *
  * @note    The default is @p TRUE.
  */
-#define CH_CFG_USE_MEMCORE                  FALSE
+#define CH_CFG_USE_MEMCORE                  TRUE
 
 /**
  * @brief   Heap Allocator APIs.
@@ -302,7 +302,7 @@
  *          @p CH_CFG_USE_SEMAPHORES.
  * @note    Mutexes are recommended.
  */
-#define CH_CFG_USE_HEAP                     FALSE
+#define CH_CFG_USE_HEAP                     TRUE
 
 /**
  * @brief   C-runtime allocator.

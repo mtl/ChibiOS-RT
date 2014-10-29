@@ -28,9 +28,9 @@ typedef struct kbd_matrix_config KBDMatrixConfig;
  */
 typedef struct kbd_matrix_scanner {
   /**
-   * @brief Get a row of matrix data.
+   * @brief Scan a row of matrix data.
    */
-  uint8_t * (*get_row)( uint8_t row );
+  void (*scan_row)( uint8_t, uint8_t[] );
   /**
    * @brief Initialize the scanner.
    */
