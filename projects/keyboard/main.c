@@ -141,7 +141,7 @@ int main(void) {
 
   KBDMatrixScanner scanner;
   scanner_a( &scanner, matrix );
-  scanner_a( &scanner, matrix_P );
+  /*scanner_a( &scanner, matrix_P );*/
 
 
 
