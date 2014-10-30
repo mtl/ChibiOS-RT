@@ -12,7 +12,7 @@
 /***************************************************************************/
 // Prototypes:
 
-KBDMatrixScanner * scanner_a( void );
+void scanner_a( KBDMatrixScanner *, KBDMatrix * );
 
 #endif
 /* vi: set et sts=2 sw=2 ts=2: */

@@ -14,12 +14,13 @@
     limitations under the License.
 */
 
+#include <avr/pgmspace.h>
+
 #include "ch.h"
 #include "hal.h"
 #include "pal.h"
-#include "test.h"
-
 #include "pal_lld.h"
+#include "test.h"
 
 #include "keyboard/input/matrix/matrix.h"
 #include "keyboard/input/matrix/scanner_a.h"
@@ -30,7 +31,7 @@
 /**
  * @brief Keyboard matrix configuration.
  */
-KBDMatrixConfig * matrix_config = &(KBDMatrixConfig){
+const KBDMatrix * matrix = &(KBDMatrix){
   .num_rows = KBD_MATRIX_NUM_ROWS,
   .num_cols = KBD_MATRIX_NUM_COLS,
   .row_pins = &(IOBus[]){
@@ -88,9 +89,8 @@ int main(void) {
   halInit();
   chSysInit();
 
-
-  matrix_config->scanner = scanner_a();
-  matrix_config->scanner->init( matrix_config );
+  KBDMatrixScanner scanner;
+  scanner_a( &scanner, matrix );
 
 
 

@@ -16,17 +16,19 @@
 //#include "matrix.h"
 //#include "util.h"
 #include "pal.h"
-#include "keyboard/input/matrix/scanner.h"
 
 /***************************************************************************/
 // Static prototypes:
 
-typedef struct kbd_matrix_scanner KBDMatrixScanner;
+/* Keyboard state array elements: */
+#define KBD_MATRIX_STATE_REPORTED 0
+#define KBD_MATRIX_STATE_LATEST 1
+#define KBD_MATRIX_STATE_BOUNCING 2
 
 /**
- * @brief   Keyboard matrix interface configuration structure.
+ * @brief   Keyboard matrix structure.
  */
-typedef struct kbd_matrix_config {
+typedef struct kbd_matrix {
   /**
    * @brief Number of rows in the matrix.
    */
@@ -35,6 +37,10 @@ typedef struct kbd_matrix_config {
    * @brief Number of columns in the matrix.
    */
   uint8_t                   num_cols;
+  /**
+   * @brief Whether the rows and columns are stored in PROGMEM.
+   */
+  bool progmem;
   /**
    * @brief Array of row pin descriptors.
    * @note  @p IOBus.mask must have only one bit set.
@@ -46,11 +52,11 @@ typedef struct kbd_matrix_config {
    */
   IOBus                     (*col_pins)[];
   /**
-   * @brief Matrix scanner interface.
+   * @brief Array of matrix state data.
    */
-  KBDMatrixScanner *        scanner;
+  uint8_t                   (*state[3])[];
   /* End of the mandatory fields.*/
-} KBDMatrixConfig;
+} KBDMatrix;
 
 #endif
 /* vi: set et sts=2 sw=2 ts=2: */

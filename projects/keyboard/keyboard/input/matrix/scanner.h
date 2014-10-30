@@ -7,7 +7,7 @@
 #define __KBD_SCANNER__
 
 //#include <stdint.h>
-//#include <stdbool.h>
+#include <stdbool.h>
 //#include <avr/io.h>
 //#include <util/delay.h>
 //#include "debug.h"
@@ -21,28 +21,24 @@
 /***************************************************************************/
 // Static prototypes:
 
-typedef struct kbd_matrix_config KBDMatrixConfig;
+typedef struct kbd_matrix KBDMatrix;
 
 /**
  * @brief   Matrix scanner interface.
  */
 typedef struct kbd_matrix_scanner {
   /**
-   * @brief Scan a row of matrix data.
+   * @brief Keyboard matrix configuration.
    */
-  void (*scan_row)( uint8_t, uint8_t[] );
-  /**
-   * @brief Initialize the scanner.
-   */
-  void (*init)( KBDMatrixConfig* );
+  KBDMatrix * matrix;
   /**
    * @brief Print the current matrix state.
    */
-  void (*print)( void );
+  void (*print)( struct kbd_matrix_scanner * );
   /**
    * @brief Scan the matrix.
    */
-  uint8_t (*scan)( void );
+  uint8_t (*scan)( struct kbd_matrix_scanner * );
 } KBDMatrixScanner;
 
 #endif
