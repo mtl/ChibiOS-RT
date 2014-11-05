@@ -48,14 +48,14 @@ int main(void) {
   /*
    * Activates the serial driver 1 using the driver default configuration.
    */
-  sdStart(&SD1, NULL);
+  sdStart(&SD2, NULL);
 
   /*
    * Starts the LED blinker thread.
    */
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
 
-  TestThread(&SD1);
+  TestThread(&SD2);
   while(TRUE) {
     chThdSleepMilliseconds(1000);
   }
