@@ -15,6 +15,7 @@
 //#include "print.h"
 //#include "matrix.h"
 //#include "util.h"
+#include "hal.h"
 #include "pal.h"
 
 /***************************************************************************/

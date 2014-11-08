@@ -16,7 +16,7 @@
 //#include "matrix.h"
 //#include "util.h"
 //#include "pal.h"
-#include "keyboard/input/matrix/matrix.h"
+#include "input/keyboard/matrix/matrix.h"
 
 /***************************************************************************/
 // Static prototypes:

@@ -82,3 +82,4 @@ int main(void) {
   while (true) {
   }
 }
+/* vi: set et sts=2 sw=2 ts=2: */

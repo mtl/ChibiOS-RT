@@ -4,7 +4,7 @@
  *
  ***************************************************************************/
 
-#include "keyboard/input/matrix/matrix.h"
+#include "input/keyboard/matrix/matrix.h"
 
 uint16_t fwkm_get_data_size( KBDMatrix * matrix ) {
 
@@ -22,5 +22,4 @@ void fwkm_init( KBDMatrix * matrix ) {
 
 
 
-#endif
 /* vi: set et sts=2 sw=2 ts=2: */

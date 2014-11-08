@@ -7,11 +7,11 @@
 #include <avr/pgmspace.h>
 #include <util/delay.h>
 
-#include "ch.h"
+#include "nil.h"
 #include "hal.h"
 #include "pal.h"
 
-#include "keyboard/input/matrix/scanner_a.h"
+#include "input/keyboard/matrix/scanner_a.h"
 
 /* Static function prototypes: */
 static void get_pin( ioportid_t *, uint_fast8_t *, IOBus [], uint8_t, bool );

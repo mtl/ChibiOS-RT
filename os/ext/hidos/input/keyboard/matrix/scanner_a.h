@@ -7,7 +7,7 @@
 #define __KBD_MATRIX_SCANNER_A__
 
 #include <stdint.h>
-#include "keyboard/input/matrix/scanner.h"
+#include "input/keyboard/matrix/scanner.h"
 
 /***************************************************************************/
 // Prototypes:

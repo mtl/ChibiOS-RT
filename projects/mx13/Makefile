@@ -64,8 +64,11 @@ include $(CHIBIOS)/os/hal/ports/AVR/platform.mk
 include $(CHIBIOS)/os/hal/osal/nil/osal.mk
 include $(CHIBIOS)/os/nil/nil.mk
 include $(CHIBIOS)/os/nil/ports/AVR/compilers/GCC/mk/port.mk
+include $(CHIBIOS)/os/ext/hidos/hidos.mk
 #include $(CHIBIOS)/test/rt/test.mk
 
+	  #input/keyboard/matrix/matrix.c \
+	  #input/keyboard/matrix/scanner_a.c \
 # List C source files here. (C dependencies are automatically generated.)
 SRC = $(PORTSRC) \
       $(KERNSRC) \
@@ -74,8 +77,7 @@ SRC = $(PORTSRC) \
       $(OSALSRC) \
       $(PLATFORMSRC) \
       $(BOARDSRC) \
-	  keyboard/input/matrix/matrix.c \
-	  keyboard/input/matrix/scanner_a.c \
+      $(HIDOSSRC) \
       main.c
 
 # List C++ source files here. (C dependencies are automatically generated.)
@@ -107,7 +109,8 @@ DEBUG = dwarf-2
 #     For a directory that has spaces, enclose it in quotes.
 EXTRAINCDIRS = $(PORTINC) $(KERNINC) $(TESTINC) \
                $(HALINC) $(OSALINC) $(PLATFORMINC) \
-               $(BOARDINC) $(CHIBIOS)/os/various
+               $(BOARDINC) $(CHIBIOS)/os/various \
+			   $(HIDOSINC)
 
 # Compiler flag to set the C Standard level.
 #     c89   = "ANSI" C
