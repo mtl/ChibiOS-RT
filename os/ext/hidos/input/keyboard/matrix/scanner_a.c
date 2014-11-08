@@ -23,6 +23,21 @@ static void scan_row( KBDMatrixScanner*, uint8_t, uint8_t[] );
 static void unselect_row( KBDMatrixScanner*, uint8_t );
 
 /**
+ * @brief   The thread function for a Scanner A thread.
+ * @details This function is declared noreturn and its signature has a void
+ *          return type.
+ *
+ * @param[in] arg       unused (type void *)
+ */
+THD_FUNCTION( hidIKMatrixScannerAF, arg ) {
+}
+
+
+
+
+
+
+/**
  * @brief Get information about a matrix row or column pin.
  *
  * @param[out] portid the pin's I/O port

@@ -18,6 +18,32 @@
 //#include "pal.h"
 #include "input/keyboard/matrix/matrix.h"
 
+/**
+ * @brief   Static working area allocation for keyboard matrix scanner.
+ * @details This macro is used to allocate a static thread working area
+ *          for a keyboard matrix scanner.
+ *
+ * @param[in] scanner   the scanner "class"
+ * @param[in] id        the thread identifier
+ */
+#define HID_IK_MATRIX_SCANNER( scanner, id ) \
+  THD_WORKING_AREA( id ## WA, scanner ## WASize )
+
+
+/**
+ * @brief   User threads table entry for keyboard matrix scanner
+ * @details This macro is used to emit an entry for the user threads table
+ *          to represent a keyboard matrix scanner thread.
+ *
+ * @param[in] scanner   the scanner "class"
+ * @param[in] id        the thread identifier
+ * @param[in] name      the thread name (string)
+ * @param[in] arg       the thread function argument
+ */
+#define HID_IK_MATRIX_SCANNER_THD( scanner, id, name, arg ) \
+  THD_TABLE_ENTRY( id ## WA, name, scanner ## F, arg )
+
+
 /***************************************************************************/
 // Static prototypes:
 

@@ -16,6 +16,16 @@
 
 #include "hal.h"
 #include "nil.h"
+#include "input/keyboard/matrix/scanner_a.h"
+
+//---------------------------------------------------------------------------
+
+/* Keyboard matrix scanner: */
+HID_IK_MATRIX_SCANNER( hidIKMatrixScannerA, matrixScanner );
+
+
+//---------------------------------------------------------------------------
+
 
 /*
  * Thread 1.
@@ -58,6 +68,20 @@ THD_FUNCTION(Thread2, arg) {
 THD_TABLE_BEGIN
   THD_TABLE_ENTRY(waThread1, "blinker", Thread1, NULL)
   THD_TABLE_ENTRY(waThread2, "hello", Thread2, NULL)
+
+  // Threads:
+  //   Keyboard
+  //     USB input?
+  //     Matrix scanner
+  //     Layer filter
+  //     USB output
+
+  HID_IK_MATRIX_SCANNER_THD(
+      hidIKMatrixScannerA, matrixScanner, "matrix-scanner", NULL
+  )
+
+
+
 THD_TABLE_END
 
 /*
