@@ -15,12 +15,12 @@
 
 /* Static function prototypes: */
 static void get_pin( ioportid_t *, uint_fast8_t *, IOBus [], uint8_t, bool );
-static void init( KBDMatrixScanner* );
-static void print( KBDMatrixScanner* );
-static void select_row( KBDMatrixScanner*, uint8_t );
-static uint8_t scan( KBDMatrixScanner* );
-static void scan_row( KBDMatrixScanner*, uint8_t, uint8_t[] );
-static void unselect_row( KBDMatrixScanner*, uint8_t );
+static void init( FwIKMatrixScanner* );
+static void print( FwIKMatrixScanner* );
+static void select_row( FwIKMatrixScanner*, uint8_t );
+static uint8_t scan( FwIKMatrixScanner* );
+static void scan_row( FwIKMatrixScanner*, uint8_t, uint8_t[] );
+static void unselect_row( FwIKMatrixScanner*, uint8_t );
 
 /**
  * @brief   The thread function for a Scanner A thread.
@@ -29,7 +29,7 @@ static void unselect_row( KBDMatrixScanner*, uint8_t );
  *
  * @param[in] arg       unused (type void *)
  */
-THD_FUNCTION( hidIKMatrixScannerAF, arg ) {
+THD_FUNCTION( fwIKMatrixScannerAF, arg ) {
 }
 
 
@@ -74,14 +74,14 @@ static void get_pin(
  *
  * @param[in] self the keyboard matrix scanner
  */
-static void init( KBDMatrixScanner * self ) {
+static void init( FwIKMatrixScanner * self ) {
 
   // To use PORTF, disable JTAG by writing JTD bit twice within four cycles:
   /*MCUCR |= (1<<JTD);*/
   /*MCUCR |= (1<<JTD);*/
     
   /* Initialize rows: */
-  KBDMatrix * matrix = self->matrix;
+  FwIKMatrix * matrix = self->matrix;
   uint8_t num_rows = matrix->num_rows;
   for ( uint8_t row = 0; row < num_rows; row++ ) {
     unselect_row( self, row );
@@ -114,7 +114,7 @@ static void init( KBDMatrixScanner * self ) {
  *
  * @param[in] self the keyboard matrix scanner
  */
-static void print( KBDMatrixScanner * self ) {
+static void print( FwIKMatrixScanner * self ) {
 }
 
 /**
@@ -126,9 +126,9 @@ static void print( KBDMatrixScanner * self ) {
  *
  * @notapi
  */
-static void select_row( KBDMatrixScanner * self, uint8_t row ) {
+static void select_row( FwIKMatrixScanner * self, uint8_t row ) {
 
-  KBDMatrix * matrix = self->matrix;
+  FwIKMatrix * matrix = self->matrix;
   uint_fast8_t offset;
   ioportid_t portid;
 
@@ -142,7 +142,7 @@ static void select_row( KBDMatrixScanner * self, uint8_t row ) {
  *
  * @param[in] self the keyboard matrix scanner
  */
-static uint8_t scan( KBDMatrixScanner * self ) {
+static uint8_t scan( FwIKMatrixScanner * self ) {
   return 0;
 }
 
@@ -158,9 +158,9 @@ static uint8_t scan( KBDMatrixScanner * self ) {
  *
  * @return the row of data
  */
-static void scan_row( KBDMatrixScanner * self, uint8_t row, uint8_t columns[] ) {
+static void scan_row( FwIKMatrixScanner * self, uint8_t row, uint8_t columns[] ) {
 
-  KBDMatrix * matrix = self->matrix;
+  FwIKMatrix * matrix = self->matrix;
   uint_fast8_t offset;
   ioportid_t portid;
   bool use_pgm = matrix->progmem;
@@ -197,11 +197,11 @@ static void scan_row( KBDMatrixScanner * self, uint8_t row, uint8_t columns[] ) 
  * @param[out] self the matrix scanner
  * @param[in] matrix the key matrix
  */
-void scanner_a( KBDMatrixScanner * self, KBDMatrix * matrix ) {
+void scanner_a( FwIKMatrixScanner * self, FwIKMatrix * matrix ) {
 
   self->matrix = matrix;
-  self->print = &print;
-  self->scan = &scan;
+  /*self->print = &print;*/
+  /*self->scan = &scan;*/
 
   init( self );
 }
@@ -215,9 +215,9 @@ void scanner_a( KBDMatrixScanner * self, KBDMatrix * matrix ) {
  *
  * @notapi
  */
-static void unselect_row( KBDMatrixScanner * self, uint8_t row ) {
+static void unselect_row( FwIKMatrixScanner * self, uint8_t row ) {
 
-  KBDMatrix * matrix = self->matrix;
+  FwIKMatrix * matrix = self->matrix;
   uint_fast8_t offset;
   ioportid_t portid;
 

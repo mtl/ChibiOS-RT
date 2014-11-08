@@ -21,7 +21,7 @@
 //---------------------------------------------------------------------------
 
 /* Keyboard matrix scanner: */
-HID_IK_MATRIX_SCANNER( hidIKMatrixScannerA, matrixScanner );
+FW_IK_MATRIX_SCANNER( fwIKMatrixScannerA, matrixScanner );
 
 
 //---------------------------------------------------------------------------
@@ -76,8 +76,8 @@ THD_TABLE_BEGIN
   //     Layer filter
   //     USB output
 
-  HID_IK_MATRIX_SCANNER_THD(
-      hidIKMatrixScannerA, matrixScanner, "matrix-scanner", NULL
+  FW_IK_MATRIX_SCANNER_THD(
+      fwIKMatrixScannerA, matrixScanner, "matrix-scanner", NULL
   )
 
 

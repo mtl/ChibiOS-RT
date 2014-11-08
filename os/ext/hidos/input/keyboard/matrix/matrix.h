@@ -3,8 +3,8 @@
  *  Keyboard matrix interface
  *
  ***************************************************************************/
-#if !defined(__KBD_MATRIX__)
-#define __KBD_MATRIX__
+#if !defined(__FW_IK_MATRIX__)
+#define __FW_IK_MATRIX__
 
 //#include <stdint.h>
 //#include <stdbool.h>
@@ -22,14 +22,14 @@
 // Static prototypes:
 
 /* Keyboard state array elements: */
-#define KBD_MATRIX_STATE_REPORTED 0
-#define KBD_MATRIX_STATE_LATEST 1
-#define KBD_MATRIX_STATE_BOUNCING 2
+#define FW_IK_MATRIX_STATE_REPORTED 0
+#define FW_IK_MATRIX_STATE_LATEST 1
+#define FW_IK_MATRIX_STATE_BOUNCING 2
 
 /**
  * @brief   Keyboard matrix structure.
  */
-typedef struct kbd_matrix {
+typedef struct fw_ik_matrix {
   /**
    * @brief Number of rows in the matrix.
    */
@@ -57,7 +57,7 @@ typedef struct kbd_matrix {
    */
   uint8_t                   (*state[3])[];
   /* End of the mandatory fields.*/
-} KBDMatrix;
+} FwIKMatrix;
 
 #endif
 /* vi: set et sts=2 sw=2 ts=2: */

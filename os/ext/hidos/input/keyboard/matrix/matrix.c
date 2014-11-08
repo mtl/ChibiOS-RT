@@ -6,7 +6,7 @@
 
 #include "input/keyboard/matrix/matrix.h"
 
-uint16_t fwkm_get_data_size( KBDMatrix * matrix ) {
+uint16_t fwkm_get_data_size( FwIKMatrix * matrix ) {
 
   return (
     3 * matrix->num_rows * (
@@ -16,7 +16,7 @@ uint16_t fwkm_get_data_size( KBDMatrix * matrix ) {
   );
 }
 
-void fwkm_init( KBDMatrix * matrix ) {
+void fwkm_init( FwIKMatrix * matrix ) {
 }
 
 
